@@ -37,3 +37,25 @@ def compute_throughput(completions: Dict[str, int], total_time: int) -> float:
     if total_time <= 0:
         return 0.0
     return len(completions) / total_time
+
+
+def compute_avg_turnaround_time(
+    completion_times: Dict[str, int],
+    arrival_times: Dict[str, int]
+) -> float:
+    """
+    Calcula el Average Turnaround Time (TAT) dado:
+      - completion_times: {pid: ciclo de finalización}
+      - arrival_times:    {pid: ciclo de llegada}
+    TAT_i = finish_i – arrival_i
+    Se devuelve el promedio sobre todos los procesos.
+    """
+    if not completion_times:
+        return 0.0
+
+    total = 0
+    for pid, finish in completion_times.items():
+        at = arrival_times.get(pid, 0)
+        total += (finish - at)
+
+    return total / len(completion_times)

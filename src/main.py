@@ -60,11 +60,12 @@ acts = load_actions("data/actions.txt")
 # print("Semaphore waits:", sync_res_sem.waiting_counts)
 
 # Scheduling
-sched = run_scheduling(procs, 'rr', quantum=4)
-awt = compute_avg_waiting_time(sched.waiting_times)
-print(f"RR AWT: {awt:.2f}")
+# sched = run_scheduling(procs, 'rr', quantum=4)
+# awt = compute_avg_waiting_time(sched.waiting_times)
+# print(f"RR AWT: {awt:.2f}")
 
-# Synchronization
-sync = run_synchronization(procs, res, acts, mode='mutex')
-total_waits = compute_total_waits(sync.waiting_counts)
-print(f"Total mutex waits: {total_waits}")
+# # Synchronization
+# sync = run_synchronization(procs, res, acts, mode='mutex')
+# total_waits = compute_total_waits(sync.waiting_counts)
+# print(f"Total mutex waits: {total_waits}")
+

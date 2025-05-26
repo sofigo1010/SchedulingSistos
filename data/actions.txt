@@ -1,0 +1,23 @@
+# PID, ACCION, Recurso, CICLO
+
+# Ciclo 0: 3 procesos compiten por R1 (solo uno entra, dos deben esperar)
+P1, READ, R1, 0
+P2, WRITE, R1, 0
+P3, READ, R1, 0
+
+# Ciclo 1: 2 procesos compiten por R2 (solo uno entra)
+P4, WRITE, R2, 1
+P5, READ, R2, 1
+
+# Ciclo 2: 2 procesos compiten por R4
+P6, READ, R4, 2
+P7, WRITE, R4, 2
+
+# Ciclo 3: Proceso más tardío por R1 (deberá esperar a los anteriores)
+P8, READ, R1, 3
+
+# Ciclo 4: Acceso único a R5 (debe entrar)
+P9, WRITE, R5, 4
+
+# Ciclo 5: Otro proceso por R5 (debe esperar si P9 no ha liberado)
+P10, READ, R5, 5

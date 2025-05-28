@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import sys
 from pathlib import Path
 from typing import List
@@ -6,11 +5,9 @@ from typing import List
 import customtkinter as ctk
 from tkinter import filedialog, messagebox
 
-# Aseguramos que el directorio `src/` esté en el PYTHONPATH
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 
-# Importamos nuestros módulos desde src/
 from gui.styles import apply_theme
 from gui.controls_panel import ControlsPanel
 from gui.gantt_canvas import GanttCanvas
@@ -24,7 +21,6 @@ from utils.metrics import (
     compute_avg_turnaround_time
 )
 
-
 class MainWindow(ctk.CTk):
     def __init__(self):
         super().__init__()
@@ -32,34 +28,39 @@ class MainWindow(ctk.CTk):
         self.geometry("1400x700")
         apply_theme()
 
-        # Layout: controles izquierda, resultados a la derecha
+
+        self.processes_path: str = ''
+        self.resources_path: str = ''
+        self.actions_path: str = ''
+
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
 
-        # Panel de controles
         self.controls = ControlsPanel(
             master=self,
             callbacks={
-                'load':            self.on_load,
-                'load_resources':  self.on_load_resources,
-                'load_actions':    self.on_load_actions,
-                'run':             self.on_run,
-                'run_sync':        self.on_run_sync,
-                'pause':           self.on_pause,
-                'clear':           self.on_clear
+                'load':               self.on_load,
+                'view_process_file':  self.on_view_process_file,
+                'load_resources':     self.on_load_resources,
+                'view_resources_file':self.on_view_resources_file,
+                'load_actions':       self.on_load_actions,
+                'view_actions_file':  self.on_view_actions_file,
+                'run':                self.on_run,
+                'run_sync':           self.on_run_sync,
+                'pause':              self.on_pause,
+                'clear':              self.on_clear
             }
         )
         self.controls.grid(row=0, column=0, sticky="ns")
 
-        # Contenedor para múltiples diagramas
+
         self.results_frame = ctk.CTkScrollableFrame(self, fg_color="transparent")
         self.results_frame.grid(row=0, column=1, sticky="nsew", padx=10, pady=10)
         self.results_frame.grid_columnconfigure(0, weight=1)
 
-        # Lista para almacenar referencias a los GanttCanvas creados
         self.gantt_canvases: List[GanttCanvas] = []
 
-        # Datos cargados
+
         self.processes = []
         self.resources = []
         self.actions = []
@@ -74,9 +75,22 @@ class MainWindow(ctk.CTk):
             return
         try:
             self.processes = load_processes(path)
+            self.processes_path = path
             messagebox.showinfo("Carga exitosa", f"{len(self.processes)} procesos cargados.")
         except Exception as e:
             messagebox.showerror("Error al cargar procesos", str(e))
+
+    def on_view_process_file(self):
+        """Muestra contenido del archivo de procesos en el panel."""
+        if not self.processes_path:
+            messagebox.showwarning("Atención", "Primero carga un archivo de procesos.")
+            return
+        try:
+            with open(self.processes_path, 'r', encoding='utf-8') as f:
+                contenido = f.read()
+            self.controls.display_file_content(contenido)
+        except Exception as e:
+            messagebox.showerror("Error al mostrar archivo", str(e))
 
     def on_load_resources(self):
         """Carga archivo de recursos."""
@@ -88,9 +102,22 @@ class MainWindow(ctk.CTk):
             return
         try:
             self.resources = load_resources(path)
+            self.resources_path = path
             messagebox.showinfo("Carga exitosa", f"{len(self.resources)} recursos cargados.")
         except Exception as e:
             messagebox.showerror("Error al cargar recursos", str(e))
+
+    def on_view_resources_file(self):
+        """Muestra contenido del archivo de recursos en el panel."""
+        if not self.resources_path:
+            messagebox.showwarning("Atención", "Primero carga un archivo de recursos.")
+            return
+        try:
+            with open(self.resources_path, 'r', encoding='utf-8') as f:
+                contenido = f.read()
+            self.controls.display_sync_file_content(contenido)
+        except Exception as e:
+            messagebox.showerror("Error al mostrar archivo", str(e))
 
     def on_load_actions(self):
         """Carga archivo de acciones."""
@@ -102,9 +129,22 @@ class MainWindow(ctk.CTk):
             return
         try:
             self.actions = load_actions(path)
+            self.actions_path = path
             messagebox.showinfo("Carga exitosa", f"{len(self.actions)} acciones cargadas.")
         except Exception as e:
             messagebox.showerror("Error al cargar acciones", str(e))
+
+    def on_view_actions_file(self):
+        """Muestra contenido del archivo de acciones en el panel."""
+        if not self.actions_path:
+            messagebox.showwarning("Atención", "Primero carga un archivo de acciones.")
+            return
+        try:
+            with open(self.actions_path, 'r', encoding='utf-8') as f:
+                contenido = f.read()
+            self.controls.display_sync_file_content(contenido)
+        except Exception as e:
+            messagebox.showerror("Error al mostrar archivo", str(e))
 
     def on_run(self, algorithms=None, quantum=None, delay=0):
         """Ejecuta calendarización, muestra métricas y dibuja Gantt."""
@@ -207,7 +247,7 @@ class MainWindow(ctk.CTk):
 
     def show_sync_info(self, pid, state, res):
         """
-        Al clicar un bloque de sync, muestra:
+        Al darle click a un bloque de sync, muestra:
           - PID
           - Estado (ACCESED/WAITING)
           - Ciclo start y end (end = start + 1)

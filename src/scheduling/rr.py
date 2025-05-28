@@ -6,7 +6,7 @@ from scheduling.fifo import ScheduleResult
 def schedule(processes: List[Process], **kwargs) -> ScheduleResult:
     """
     Round Robin scheduling (preemptivo).
-    Requiere 'quantum' en kwargs.
+    Requiere 'quantum' 
     """
     quantum = kwargs.get('quantum')
     if quantum is None or quantum <= 0:
@@ -26,7 +26,6 @@ def schedule(processes: List[Process], **kwargs) -> ScheduleResult:
     ready_queue: List[Process] = []
     i = 0  # índice de llegada
 
-    # Simulación
     while i < n or ready_queue:
         # Añadir nuevos procesos llegados
         while i < n and procs[i].arrival_time <= current_time:

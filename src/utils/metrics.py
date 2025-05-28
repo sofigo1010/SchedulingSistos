@@ -1,5 +1,4 @@
-from typing import Dict, Tuple, List
-
+from typing import Dict
 
 def compute_avg_waiting_time(waiting_times: Dict[str, int]) -> float:
     """
@@ -32,10 +31,17 @@ def compute_waiting_rate(waiting_counts: Dict[str, int], total_cycles: int) -> f
 def compute_throughput(completions: Dict[str, int], total_time: int) -> float:
     """
     Throughput = #procesos completados / total_time
+
     completions: dict de pid a ciclo de finalización
+    total_time: número total de ciclos (si <= 0, se calcula como max(cycle)+1)
     """
-    if total_time <= 0:
+    if not completions:
         return 0.0
+
+    # Si el caller no proporcionó un total_time válido, lo inferimos
+    if total_time <= 0:
+        total_time = max(completions.values()) + 1
+
     return len(completions) / total_time
 
 
@@ -47,6 +53,7 @@ def compute_avg_turnaround_time(
     Calcula el Average Turnaround Time (TAT) dado:
       - completion_times: {pid: ciclo de finalización}
       - arrival_times:    {pid: ciclo de llegada}
+
     TAT_i = finish_i – arrival_i
     Se devuelve el promedio sobre todos los procesos.
     """

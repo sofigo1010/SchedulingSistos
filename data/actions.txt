@@ -1,23 +1,58 @@
-# PID, ACCION, Recurso, CICLO
+# PID, ACCION, Recurso, Ciclo
 
-# Ciclo 0: 3 procesos compiten por R1 (solo uno entra, dos deben esperar)
-P1, READ, R1, 0
-P2, WRITE, R1, 0
-P3, READ, R1, 0
+# --- Ciclo 0: arranque con contención en R1 y R2
+P1, READ,   R1, 0
+P2, WRITE,  R1, 0
+P3, READ,   R2, 0
+P4, WRITE,  R2, 0
+P5, READ,   R2, 0
 
-# Ciclo 1: 2 procesos compiten por R2 (solo uno entra)
-P4, WRITE, R2, 1
-P5, READ, R2, 1
+# --- Ciclo 1: ampliamos en R2 y R3
+P2, READ,   R2, 1
+P3, WRITE,  R2, 1
+P6, READ,   R2, 1
+P7, READ,   R3, 1
+P8, WRITE,  R3, 1
 
-# Ciclo 2: 2 procesos compiten por R4
-P6, READ, R4, 2
-P7, WRITE, R4, 2
+# --- Ciclo 2: reintentos en R1, nuevos en R3 y R4
+P1, WRITE,  R1, 2
+P2, READ,   R1, 2
+P9, READ,   R3, 2
+P10, WRITE, R3, 2
+P11, READ,  R4, 2
 
-# Ciclo 3: Proceso más tardío por R1 (deberá esperar a los anteriores)
-P8, READ, R1, 3
+# --- Ciclo 3: saturación en R5
+P4, READ,   R5, 3
+P5, WRITE,  R5, 3
+P12, READ,  R5, 3
+P13, WRITE, R5, 3
 
-# Ciclo 4: Acceso único a R5 (debe entrar)
-P9, WRITE, R5, 4
+# --- Ciclo 4: mezcla R2, R4
+P6, WRITE,  R2, 4
+P7, READ,   R2, 4
+P14, READ,  R4, 4
+P15, WRITE, R4, 4
 
-# Ciclo 5: Otro proceso por R5 (debe esperar si P9 no ha liberado)
-P10, READ, R5, 5
+# --- Ciclo 5: acceso libre R3, reintentos R5
+P8, READ,   R3, 5
+P9, WRITE,  R3, 5
+P16, READ,  R5, 5
+P17, WRITE, R5, 5
+
+# --- Ciclo 6: recargas R1 y R2
+P3, READ,   R1, 6
+P4, WRITE,  R2, 6
+P18, READ,  R2, 6
+
+# --- Ciclo 7: pico en R2 y R3
+P10, READ,  R2, 7
+P11, WRITE, R2, 7
+P12, READ,  R2, 7
+P13, WRITE, R3, 7
+P14, READ,  R3, 7
+
+# --- Ciclo 8: último intento
+P15, READ,  R5, 8
+P16, WRITE, R1, 8
+P17, READ,  R1, 8
+P18, WRITE, R4, 8

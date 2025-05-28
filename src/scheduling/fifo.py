@@ -1,4 +1,3 @@
-# src/scheduling/fifo.py
 from typing import List
 from data_io.process_loader import Process
 
@@ -24,7 +23,7 @@ def schedule(processes: List[Process], **kwargs) -> ScheduleResult:
     current_time = 0
 
     for p in procs:
-        # Si la CPU está ociosa hasta la llegada del proceso
+        # Si la CPU está ocupada hasta la llegada del proceso
         if current_time < p.arrival_time:
             current_time = p.arrival_time
         start = current_time

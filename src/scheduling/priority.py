@@ -8,7 +8,7 @@ def schedule(processes: List[Process], **kwargs) -> ScheduleResult:
     Priority scheduling (no-preemptivo). En cada punto, selecciona el proceso con mayor prioridad
     (número menor) entre los que ya han llegado.
     """
-    # Ordenar copia por arrival_time
+
     procs = sorted(processes, key=lambda p: p.arrival_time)
     timeline = []
     waiting_times = {}

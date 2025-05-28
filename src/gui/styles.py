@@ -1,12 +1,11 @@
 import customtkinter as ctk
 
-# Colores propios
 NAVY_BLUE     = "#001f3f"
 ROYAL_BLUE    = "#4169e1"
 LIGHTER_BLUE  = "#3a7bd5"
 WHITE_TEXT    = "#FFFFFF"
 
-# Guardamos los métodos originales para no perder funcionalidad
+
 _original_frame_configure        = ctk.CTkFrame.configure
 _original_button_configure       = ctk.CTkButton.configure
 _original_optionmenu_configure   = ctk.CTkOptionMenu.configure
@@ -16,14 +15,11 @@ _original_checkbox_configure     = ctk.CTkCheckBox.configure
 
 
 def apply_theme():
-    # 1) Modo oscuro global
+
     ctk.set_appearance_mode("dark")
-    # 2) No cargamos un theme JSON; usaremos los colores directamente
 
-    # 3) Configuración global de widgets (puedes extender según necesites)
-    ctk.set_default_color_theme("dark-blue")  # tema integrado, opcional
+    ctk.set_default_color_theme("dark-blue")  
 
-    # Parches globales fijando colores por defecto
     def _frame_patch(self, **kw):
         kw.setdefault('fg_color', NAVY_BLUE)
         return _original_frame_configure(self, **kw)

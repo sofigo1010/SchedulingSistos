@@ -9,7 +9,7 @@ def schedule(processes: List[Process], **kwargs) -> ScheduleResult:
     En cada momento de llegada o finalización de ráfaga, selecciona el proceso con
     el menor tiempo restante.
     """
-    # Copia e inicialización
+
     procs = sorted(processes, key=lambda p: p.arrival_time)
     n = len(procs)
     timeline = []  # [(pid, start, end), ...]
@@ -21,7 +21,7 @@ def schedule(processes: List[Process], **kwargs) -> ScheduleResult:
 
     current_time = 0
     i = 0  # índice para llegada
-    # Proceso en ejecución
+
     current_proc = None  # pid
     last_switch_time = 0
 
@@ -40,7 +40,7 @@ def schedule(processes: List[Process], **kwargs) -> ScheduleResult:
         candidates.sort(key=lambda p: remaining[p.pid])
         chosen = candidates[0]
 
-        # Si cambiamos de proceso, cerrar bloque anterior
+        # Si cambia de proceso, cerrar bloque anterior
         if current_proc and current_proc != chosen.pid:
             timeline.append((current_proc, last_switch_time, current_time))
             last_switch_time = current_time

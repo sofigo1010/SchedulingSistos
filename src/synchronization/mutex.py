@@ -23,7 +23,7 @@ def simulate(processes: List[Process], resources: List[Resource], actions: List[
     for act in actions:
         actions_by_cycle.setdefault(act.cycle, []).append(act)
 
-    # Estado de recursos: en mutex, siempre count=1 por ciclo
+    # Estado de recursos siempre count=1 por ciclo
     original_counts = {res.name: 1 for res in resources}
     waiting_counts: Dict[str, int] = {p.pid: 0 for p in processes}
     timeline: List[Tuple[int, str, str, str]] = []  # (cycle, pid, resource, 'ACCESED'|'WAITING')
